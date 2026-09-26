@@ -1,0 +1,20 @@
+{
+  "name": "mithai-platform",
+  "version": "1.0.0",
+  "description": "Artisanal Indian Sweets & Royal Restaurant Platform",
+  "private": true,
+  "main": "backend/dist/server.js",
+  "scripts": {
+    "postinstall": "npm --prefix backend install && npm --prefix backend run build",
+    "build": "npm --prefix backend install && npm --prefix backend run build",
+    "start": "npm --prefix backend run start",
+    "dev": "npm --prefix backend run start",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:backend": "npm --prefix backend install && npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend install && npm --prefix frontend run build"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

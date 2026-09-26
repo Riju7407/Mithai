@@ -85,7 +85,7 @@ const startServer = async () => {
   try {
     await connectDB();
     await ensureAdminUser();
-    app.listen(ENV.PORT, () => {
+    app.listen(ENV.PORT, '0.0.0.0', () => {
       console.log(`[Express] Server running on port ${ENV.PORT} in ${ENV.NODE_ENV} mode.`);
       console.log(`[Express] Health check available at: http://localhost:${ENV.PORT}/api/health`);
     });
