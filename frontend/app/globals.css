@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 98%;
+    --foreground: 20 14% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 12%;
+    --primary: 38 68% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 165 42% 24%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 36 25% 94%;
+    --muted-foreground: 24 10% 45%;
+    --accent: 38 80% 95%;
+    --accent-foreground: 38 68% 30%;
+    --border: 36 20% 88%;
+    --input: 36 20% 88%;
+    --ring: 38 68% 48%;
+    --radius: 0.75rem;
+  }
+
+  body {
+    @apply bg-cream-50 text-stone-900 font-sans antialiased selection:bg-gold-500 selection:text-white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Custom Gold Sheen & Micro-animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #D49D34 0%, #E7BD65 50%, #B87F22 100%);
+}
+
+.gold-text-gradient {
+  background: linear-gradient(135deg, #B87F22 0%, #D49D34 50%, #94601A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.royal-emerald-gradient {
+  background: linear-gradient(135deg, #0F4A3E 0%, #1A6354 100%);
+}
+
+/* Elegant thin scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF8F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #D49D34;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B87F22;
+}
+
+/* Safe touch target minimums */
+button, a, input, select {
+  touch-action: manipulation;
+}
+
+/* Hide scrollbar utility */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
