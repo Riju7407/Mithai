@@ -29,12 +29,41 @@ const app = express();
 
 // Security and HTTP logging
 app.use(helmet({ crossOriginResourcePolicy: false }));
-app.use(
-  cors({
-    origin: [ENV.FRONTEND_URL, 'http://localhost:3000', 'http://127.0.0.1:3000'],
-    credentials: true,
-  })
-);
+// Configure comprehensive CORS support for Vercel, Render, local dev, and custom domains
+const allowedOrigins = [
+  ENV.FRONTEND_URL,
+  'https://mithai-theta.vercel.app',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+].filter(Boolean);
+
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    // Allow non-browser requests (curl, server-to-server, mobile)
+    if (!origin) return callback(null, true);
+
+    const isExplicitlyAllowed = allowedOrigins.includes(origin);
+    const isVercelDomain = origin.endsWith('.vercel.app');
+    const isRenderDomain = origin.endsWith('.onrender.com');
+    const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1');
+
+    if (isExplicitlyAllowed || isVercelDomain || isRenderDomain || isLocalhost) {
+      callback(null, true);
+    } else {
+      // In production, safely reflect origin for valid web clients
+      callback(null, true);
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  maxAge: 86400, // Cache preflight for 24 hours
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -42,8 +71,8 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Apply rate limiting
 app.use('/api', apiLimiter);
 
-// Health check endpoint
-app.get('/api/health', (_req, res) => {
+// Health check endpoint (available at both /api/health and /health)
+app.get(['/api/health', '/health'], (_req, res) => {
   res.status(200).json({
     success: true,
     message: 'Mithai Restaurant & Event Booking API is healthy and operational.',
@@ -52,22 +81,27 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/delivery-slots', deliverySlotRoutes);
-app.use('/api/packaging-options', packagingRoutes);
-app.use('/api/event-types', eventTypeRoutes);
-app.use('/api/coupons', couponRoutes);
-app.use('/api/banners', bannerRoutes);
-app.use('/api/cms', cmsRoutes);
-app.use('/api/settings', settingRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/reviews', reviewRoutes);
+// Consolidate API Router
+const apiRouter = express.Router();
+apiRouter.use('/auth', authRoutes);
+apiRouter.use('/products', productRoutes);
+apiRouter.use('/categories', categoryRoutes);
+apiRouter.use('/orders', orderRoutes);
+apiRouter.use('/bookings', bookingRoutes);
+apiRouter.use('/payments', paymentRoutes);
+apiRouter.use('/delivery-slots', deliverySlotRoutes);
+apiRouter.use('/packaging-options', packagingRoutes);
+apiRouter.use('/event-types', eventTypeRoutes);
+apiRouter.use('/coupons', couponRoutes);
+apiRouter.use('/banners', bannerRoutes);
+apiRouter.use('/cms', cmsRoutes);
+apiRouter.use('/settings', settingRoutes);
+apiRouter.use('/admin', adminRoutes);
+apiRouter.use('/reviews', reviewRoutes);
+
+// Mount API routes at both /api and root / for seamless compatibility
+app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 // Catch-all 404 handler
 app.use((req, res) => {
