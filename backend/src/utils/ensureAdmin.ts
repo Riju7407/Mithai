@@ -9,11 +9,11 @@ import { ENV } from '../config/env';
  */
 export const ensureAdminUser = async (): Promise<void> => {
   try {
-    const adminEmail = (ENV.ADMIN_EMAIL || 'admin@gmail.com').trim().toLowerCase();
-    const adminPassword = ENV.ADMIN_PASSWORD || 'Admin@41312';
+    const adminEmail = (ENV.ADMIN_EMAIL || '').trim().toLowerCase();
+    const adminPassword = ENV.ADMIN_PASSWORD;
 
     if (!adminEmail || !adminPassword) {
-      console.warn('[Admin Setup] ADMIN_EMAIL or ADMIN_PASSWORD not configured.');
+      console.warn('[Admin Setup] ADMIN_EMAIL or ADMIN_PASSWORD not configured in .env.');
       return;
     }
 

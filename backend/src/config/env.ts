@@ -14,7 +14,7 @@ export const ENV = {
   RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET || 'rzp_secret_MithaiDemo2026Sec',
   RAZORPAY_WEBHOOK_SECRET: process.env.RAZORPAY_WEBHOOK_SECRET || 'rzp_whsec_MithaiDemo2026',
   ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'admin@gmail.com',
-  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || 'Admin@41312',
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || '',
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || '',

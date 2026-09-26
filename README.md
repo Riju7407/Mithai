@@ -119,14 +119,14 @@ Visit **`http://localhost:3000`** in your browser.
 
 ---
 
-## 🔑 Demo Credentials
+## 🔑 Default & Demo Accounts
 
 | Role | Email | Password | Access Level |
 | :--- | :--- | :--- | :--- |
-| **Administrator** | `admin@gmail.com` | `Admin@41312` | Full access to `/admin` Operations Suite & Footer Management |
+| **Administrator** | Configured in `backend/.env` | Defined in `backend/.env` (`ADMIN_PASSWORD`) | Full access to `/admin` Operations Suite & Management |
 | **Customer** | `customer@mithai.com` | `Customer@123456` | Storefront, cart, instant checkout & bookings |
 
-> **Tip:** The `/login` page includes a **Quick Demo Fill** button to populate either account with a single click. Admins automatically redirect to `/admin` upon sign-in.
+> **Note:** Configure your private admin credentials securely in `backend/.env`. Admins automatically redirect to `/admin` upon sign-in.
 
 ---
 

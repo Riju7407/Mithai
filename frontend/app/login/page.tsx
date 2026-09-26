@@ -41,7 +41,8 @@ function LoginForm() {
   const handleDemoFill = (role: 'admin' | 'customer') => {
     if (role === 'admin') {
       setEmail('admin@gmail.com');
-      setPassword('Admin@41312');
+      setPassword('');
+      setErrorMsg('Admin email populated. Please enter your admin password from .env to sign in.');
     } else {
       setEmail('customer@mithai.com');
       setPassword('Customer@123456');
