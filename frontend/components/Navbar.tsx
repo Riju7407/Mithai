@@ -56,6 +56,17 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
     setUserDropdownOpen(false);
   }, [pathname]);
 
+  // Prevent background page scrolling when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [mobileMenuOpen]);
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -91,13 +102,14 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
   ];
 
   return (
-    <header
-      className={`sticky top-0 z-40 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-cream-50/95 backdrop-blur-md shadow-md border-b border-gold-200/50 py-2.5'
-          : 'bg-cream-50 border-b border-stone-200 py-3.5'
-      }`}
-    >
+    <>
+      <header
+        className={`sticky top-0 z-40 transition-all duration-300 ${
+          isScrolled
+            ? 'bg-cream-50/95 backdrop-blur-md shadow-md border-b border-gold-200/50 py-2.5'
+            : 'bg-cream-50 border-b border-stone-200 py-3.5'
+        }`}
+      >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Brand Logo */}
@@ -279,14 +291,53 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
           </div>
         </nav>
       </div>
+    </header>
 
-      {/* Mobile Drawer Navigation */}
+      {/* Mobile Drawer Navigation (Rendered outside header so it never hides or shifts on scroll) */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-[60px] z-50 bg-stone-900/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-cream-50 w-4/5 max-w-sm h-full shadow-2xl p-5 flex flex-col justify-between overflow-y-auto">
-            <div>
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          {/* Backdrop Overlay */}
+          <div
+            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-0 bg-stone-950/60 backdrop-blur-xs transition-opacity duration-200"
+            aria-hidden="true"
+          />
+
+          {/* Drawer Panel */}
+          <div className="relative w-4/5 max-w-xs sm:max-w-sm h-full bg-cream-50 shadow-2xl flex flex-col justify-between z-10 animate-in slide-in-from-left duration-200">
+            {/* Drawer Top Header with brand & explicit Cut/Close button */}
+            <div className="p-4 border-b border-stone-200 flex items-center justify-between bg-cream-100/70">
+              <Link
+                href="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2"
+              >
+                <div className="w-8 h-8 rounded-full gold-gradient flex items-center justify-center text-white shadow-gold-sm">
+                  <Sparkles className="w-4 h-4 text-amber-100" />
+                </div>
+                <div>
+                  <span className="font-serif text-lg font-bold text-royal-950 block leading-tight">
+                    Shree Mithai
+                  </span>
+                  <span className="text-[9px] uppercase tracking-wider text-gold-600 font-semibold block">
+                    Menu
+                  </span>
+                </div>
+              </Link>
+              <button
+                id="drawer-close-cut-btn"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-1.5 rounded-full text-stone-500 hover:text-royal-950 hover:bg-stone-200/60 transition-colors"
+                aria-label="Close navigation menu"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Scrollable menu content */}
+            <div className="flex-1 overflow-y-auto overscroll-contain p-4">
               {/* Mobile Search with instant suggestions */}
-              <div className="mb-5">
+              <div className="mb-4">
                 <SearchSuggestionsBar
                   placeholder="Search sweets, categories..."
                   inputClassName="w-full bg-white border border-stone-300 rounded-lg pl-9 pr-8 py-2 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-gold-500"
@@ -299,6 +350,7 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
                   <Link
                     key={link.href}
                     href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                       pathname === link.href
                         ? 'bg-gold-100/70 text-gold-900 font-bold'
@@ -334,6 +386,7 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
                 </p>
                 <Link
                   href="/event-booking"
+                  onClick={() => setMobileMenuOpen(false)}
                   className="block text-center py-2 px-3 rounded-lg gold-gradient text-royal-950 font-bold text-xs tracking-wider uppercase shadow"
                 >
                   Start Event Plan
@@ -342,10 +395,10 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
             </div>
 
             {/* Mobile Footer / Auth info */}
-            <div className="border-t border-stone-200 pt-4 mt-6">
+            <div className="border-t border-stone-200 p-4 bg-cream-100/50">
               {isAuthenticated && user ? (
                 <div className="space-y-1.5">
-                  <div className="flex items-center gap-2 mb-2 pb-2 border-b border-stone-100">
+                  <div className="flex items-center gap-2 mb-2 pb-2 border-b border-stone-200">
                     <div className="w-7 h-7 rounded-full bg-royal-700 text-white flex items-center justify-center font-bold text-xs uppercase shrink-0">
                       {user.name.charAt(0)}
                     </div>
@@ -358,6 +411,7 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
                   {user.role === 'ADMIN' && (
                     <Link
                       href="/admin"
+                      onClick={() => setMobileMenuOpen(false)}
                       className="flex items-center gap-2 px-3 py-2 text-royal-700 font-semibold hover:bg-royal-50 rounded-lg text-xs transition-colors"
                     >
                       <ShieldCheck className="w-4 h-4 text-royal-600" />
@@ -367,6 +421,7 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
 
                   <Link
                     href="/account/orders"
+                    onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center gap-2 px-3 py-2 text-stone-700 hover:bg-stone-50 rounded-lg text-xs transition-colors"
                   >
                     <ShoppingBag className="w-4 h-4 text-stone-400" />
@@ -375,6 +430,7 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
 
                   <Link
                     href="/account/bookings"
+                    onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center gap-2 px-3 py-2 text-stone-700 hover:bg-stone-50 rounded-lg text-xs transition-colors"
                   >
                     <Calendar className="w-4 h-4 text-stone-400" />
@@ -383,15 +439,19 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
 
                   <Link
                     href="/account/profile"
+                    onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center gap-2 px-3 py-2 text-stone-700 hover:bg-stone-50 rounded-lg text-xs transition-colors"
                   >
                     <User className="w-4 h-4 text-stone-400" />
                     Account & Addresses
                   </Link>
 
-                  <div className="border-t border-stone-100 pt-1 mt-1">
+                  <div className="border-t border-stone-200 pt-1 mt-1">
                     <button
-                      onClick={handleLogout}
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
                       className="w-full py-2 px-3 text-xs text-red-600 hover:bg-red-50 rounded-lg text-left flex items-center gap-2"
                     >
                       <LogOut className="w-4 h-4" />
@@ -403,12 +463,14 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
                 <div className="grid grid-cols-2 gap-2">
                   <Link
                     href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
                     className="text-center py-2 px-3 border border-stone-300 rounded-lg text-xs font-semibold text-stone-800 hover:bg-stone-100"
                   >
                     Sign In
                   </Link>
                   <Link
                     href="/register"
+                    onClick={() => setMobileMenuOpen(false)}
                     className="text-center py-2 px-3 gold-gradient text-white rounded-lg text-xs font-bold shadow"
                   >
                     Register
@@ -419,6 +481,6 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
