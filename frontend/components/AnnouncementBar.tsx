@@ -31,7 +31,7 @@ export default function AnnouncementBar() {
   if (!announcement || !announcement.text) return null;
 
   return (
-    <aside aria-label="Special announcements and offers" className="bg-royal-950 text-gold-300 text-xs sm:text-sm font-medium py-2 px-4 border-b border-gold-900/40 relative z-50">
+    <aside aria-label="Special announcements and offers" className="bg-royal-950 text-gold-300 text-xs sm:text-sm font-medium py-2 px-4 border-b border-gold-900/40 relative z-50 w-full max-w-full overflow-hidden">
       <div className="max-w-7xl mx-auto flex items-center justify-center text-center gap-2 flex-wrap">
         <Sparkles className="w-3.5 h-3.5 text-gold-400 shrink-0 animate-pulse" />
         <span className="truncate max-w-xl text-stone-200">{announcement.text}</span>

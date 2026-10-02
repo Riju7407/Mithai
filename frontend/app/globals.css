@@ -24,9 +24,17 @@
     --radius: 0.75rem;
   }
 
+  html {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   body {
     @apply bg-cream-50 text-stone-900 font-sans antialiased selection:bg-gold-500 selection:text-white;
     min-height: 100vh;
+    max-width: 100%;
+    overflow-x: hidden;
+    position: relative;
     display: flex;
     flex-direction: column;
   }
@@ -52,10 +60,9 @@
   background: linear-gradient(135deg, #0F4A3E 0%, #1A6354 100%);
 }
 
-/* Elegant thin scrollbar */
+/* Elegant thin vertical scrollbar */
 ::-webkit-scrollbar {
   width: 7px;
-  height: 7px;
 }
 ::-webkit-scrollbar-track {
   background: #FAF8F5;
@@ -66,6 +73,13 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #B87F22;
+}
+
+/* Remove all left-right (horizontal) scrollbars */
+::-webkit-scrollbar:horizontal,
+*::-webkit-scrollbar:horizontal {
+  height: 0px !important;
+  display: none !important;
 }
 
 /* Safe touch target minimums */

@@ -29,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth overflow-x-hidden">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -40,7 +40,7 @@ export default function RootLayout({
         {/* Razorpay Checkout JavaScript SDK */}
         <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
       </head>
-      <body className="min-h-screen flex flex-col font-sans">
+      <body className="min-h-screen flex flex-col font-sans overflow-x-hidden w-full max-w-full">
         <ClientLayoutShell>{children}</ClientLayoutShell>
       </body>
     </html>

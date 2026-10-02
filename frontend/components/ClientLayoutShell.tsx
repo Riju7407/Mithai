@@ -20,13 +20,13 @@ export default function ClientLayoutShell({ children }: { children: React.ReactN
   }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
       <AnnouncementBar />
       <Navbar onOpenCart={() => setCartOpen(true)} />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 w-full max-w-full overflow-x-hidden">{children}</main>
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
       <DeliveredOrderReviewPopup />
       <Footer />
-    </>
+    </div>
   );
 }

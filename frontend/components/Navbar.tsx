@@ -98,18 +98,18 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
           : 'bg-cream-50 border-b border-stone-200 py-3.5'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center text-white shadow-gold-sm group-hover:scale-105 transition-transform">
-              <Sparkles className="w-5 h-5 text-amber-100" />
+          <Link href="/" className="flex items-center gap-2 sm:gap-2.5 min-w-0 group shrink">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full gold-gradient flex items-center justify-center text-white shadow-gold-sm group-hover:scale-105 transition-transform shrink-0">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-100" />
             </div>
-            <div>
-              <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-royal-950 block leading-none">
+            <div className="min-w-0">
+              <span className="font-serif text-lg sm:text-2xl font-bold tracking-tight text-royal-950 block leading-none truncate">
                 Shree Mithai
               </span>
-              <span className="text-[10px] uppercase tracking-widest text-gold-600 font-semibold block mt-0.5">
+              <span className="text-[9px] sm:text-[10px] uppercase tracking-wider sm:tracking-widest text-gold-600 font-semibold block mt-0.5 truncate">
                 Artisanal & Event Catering
               </span>
             </div>
@@ -121,7 +121,7 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
           </div>
 
           {/* Right Action Icons (Cart, Account, Mobile Menu Toggle) */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             {/* Advance Booking Quick Action CTA on Desktop */}
             <Link
               href="/event-booking"
@@ -135,7 +135,7 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
             <button
               id="cart-toggle-btn"
               onClick={onOpenCart}
-              className="relative p-2.5 rounded-full text-royal-950 hover:bg-gold-100/60 transition-colors"
+              className="relative p-2 sm:p-2.5 rounded-full text-royal-950 hover:bg-gold-100/60 transition-colors shrink-0"
               aria-label="View Cart"
             >
               <ShoppingBag className="w-6 h-6 text-royal-900" />
@@ -146,9 +146,9 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
               )}
             </button>
 
-            {/* Account / Login */}
+            {/* Account / Login - Desktop only (hidden on mobile between cart and hamburger) */}
             {isAuthenticated && user ? (
-              <div className="relative">
+              <div className="hidden md:block relative">
                 <button
                   id="user-menu-btn"
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
@@ -218,7 +218,7 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
             ) : (
               <Link
                 href="/login"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-royal-900 border border-royal-800/30 rounded-full hover:bg-gold-500 hover:text-white hover:border-gold-500 transition-all shadow-sm"
+                className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-royal-900 border border-royal-800/30 rounded-full hover:bg-gold-500 hover:text-white hover:border-gold-500 transition-all shadow-sm"
               >
                 <User className="w-4 h-4" />
                 <span>Sign In</span>
@@ -227,8 +227,9 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
 
             {/* Mobile Menu Hamburger */}
             <button
+              id="mobile-menu-toggle-btn"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-royal-950 hover:bg-stone-200/50 transition-colors"
+              className="md:hidden p-2 rounded-lg text-royal-950 hover:bg-stone-200/50 transition-colors shrink-0"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -343,15 +344,60 @@ export default function Navbar({ onOpenCart }: NavbarProps) {
             {/* Mobile Footer / Auth info */}
             <div className="border-t border-stone-200 pt-4 mt-6">
               {isAuthenticated && user ? (
-                <div className="space-y-2">
-                  <p className="text-xs text-stone-500">Signed in as {user.email}</p>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full py-2 px-3 text-sm text-red-600 hover:bg-red-50 rounded-lg text-left flex items-center gap-2"
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 mb-2 pb-2 border-b border-stone-100">
+                    <div className="w-7 h-7 rounded-full bg-royal-700 text-white flex items-center justify-center font-bold text-xs uppercase shrink-0">
+                      {user.name.charAt(0)}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-stone-900 text-xs truncate">{user.name}</p>
+                      <p className="text-[11px] text-stone-500 truncate">{user.email}</p>
+                    </div>
+                  </div>
+
+                  {user.role === 'ADMIN' && (
+                    <Link
+                      href="/admin"
+                      className="flex items-center gap-2 px-3 py-2 text-royal-700 font-semibold hover:bg-royal-50 rounded-lg text-xs transition-colors"
+                    >
+                      <ShieldCheck className="w-4 h-4 text-royal-600" />
+                      Admin Dashboard
+                    </Link>
+                  )}
+
+                  <Link
+                    href="/account/orders"
+                    className="flex items-center gap-2 px-3 py-2 text-stone-700 hover:bg-stone-50 rounded-lg text-xs transition-colors"
                   >
-                    <LogOut className="w-4 h-4" />
-                    Sign Out
-                  </button>
+                    <ShoppingBag className="w-4 h-4 text-stone-400" />
+                    Instant Orders
+                  </Link>
+
+                  <Link
+                    href="/account/bookings"
+                    className="flex items-center gap-2 px-3 py-2 text-stone-700 hover:bg-stone-50 rounded-lg text-xs transition-colors"
+                  >
+                    <Calendar className="w-4 h-4 text-stone-400" />
+                    Event Bookings
+                  </Link>
+
+                  <Link
+                    href="/account/profile"
+                    className="flex items-center gap-2 px-3 py-2 text-stone-700 hover:bg-stone-50 rounded-lg text-xs transition-colors"
+                  >
+                    <User className="w-4 h-4 text-stone-400" />
+                    Account & Addresses
+                  </Link>
+
+                  <div className="border-t border-stone-100 pt-1 mt-1">
+                    <button
+                      onClick={handleLogout}
+                      className="w-full py-2 px-3 text-xs text-red-600 hover:bg-red-50 rounded-lg text-left flex items-center gap-2"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-2">
